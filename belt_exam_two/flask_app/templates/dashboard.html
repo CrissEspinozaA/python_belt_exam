@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <title>PyPie Derby</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href='/'>Home</a>
+            </li>
+        </ul>
+        <div class="btn-toolbar">
+            <div class="btn-group mr-4">
+                <form action="/pies">
+                    <input type="submit" value="Pie Derby" class="btn btn-dark text-info border border-info" />
+                </form>
+            </div>
+            <div class="btn-group">
+                <form action="/logout" method="POST">
+                    <input type="submit" value="Logout" class="btn btn-dark text-warning border border-warning" />
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class='maincontainer'> <!-- container-sm -->
+        <div class='col-5 p-6 bg-dark text-light'>
+            <h2 class="text-warning">PyPies by {{session ['user.first_name']}} {{session ['user.last_name']}}</h2>
+            <table>
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="col-2" scope="col">Name</th>
+                        <th class="col-2" scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pie in pies %}
+                    {% if pie.user_id == session['user.id'] %}
+                    <tr>
+                        <td>{{ pie.name }}</td>
+                        <td>
+                            <a href="/pies/edit/{{pie.id}}">Edit</a>
+                            <a href="/pies/delete/{{pie.id}}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class='col-5 p-4 bg-dark text-light'>
+            <h2 class="text-warning">Add New PyPie</h2>
+            <form action="/pies/new" method="post">
+                {% with messages = get_flashed_messages(category_filter=['error_pie']) %}
+                {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                    <strong>Información Incorrecta</strong>
+                    {% for message in messages %}
+                    <p>{{message}}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" name="name" placeholder="Nombre del pie">
+                </div>
+                <div class="form-group">
+                    <label for="filling">Filling:</label>
+                    <textarea class="form-control" name="filling" rows="1"
+                        placeholder="Relleno del pie"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="crust">Crust:</label>
+                    <textarea class="form-control" name="crust" rows="1"
+                        placeholder="Corteza del pie"></textarea>
+                </div>
+                
+                <div class="btn_create">
+                    <input type="submit" value="Add Pie" class="btn btn-warning" />
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

@@ -73,7 +73,7 @@ def pies():
         print(request.form)    
         if not Pie.validate_pie(request.form):
             print("pie failed")
-            return redirect('/pies/new')
+            return redirect('/dashboard')
         data = {
             "name": request.form['name'],
             "filling": request.form['filling'],
